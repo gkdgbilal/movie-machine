@@ -1,11 +1,22 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { server } from '../../../config';
 import Image from 'next/image';
 import Meta from '../../../components/Meta';
 import SimilarMovies from '../../../components/SimilarMovies';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchMovies } from '../../../redux/services/movieServices';
 
 function Movie({ movie, similarMovies }) {
+
+  const data = useSelector((state) => state.movie);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchMovies());
+  }, [])
+
+
   return (
     <div className="container max-w-4xl mx-auto pt-6">
       <Meta title={movie.title} />
@@ -16,6 +27,7 @@ function Movie({ movie, similarMovies }) {
           height={600}
           alt=""
           className="rounded-md"
+          onClick={() => dispatch(fetchMovies())}
         />
         <h1 className="font-bold text-xl my-2">{movie.title}</h1>
         <p className="text-gray-600 text-sm mt-4">{movie.overview}</p>

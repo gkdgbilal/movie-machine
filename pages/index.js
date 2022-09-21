@@ -4,12 +4,20 @@ import Hero from '../components/Hero';
 import PopularMovie from '../components/PopularMovie';
 import { server } from '../config';
 import SearchedMovies from '../components/SearchedMovies';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchMovies } from '../redux/services/movieServices';
 
-export default function Home({ movies, allData }) {
+export default function Home() {
   const [searchValue, setSearchValue] = useState('');
   const [storedValues, setStoredValues] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [latestSearchValue, setLatestSearchValue] = useState([]);
+
+  const movies = useSelector((state) => state.movie);
+
+  const dispatch = useDispatch();
+
+
   const handleSearchInputChanges = e => {
     setSearchValue(e);
   };
@@ -33,6 +41,11 @@ export default function Home({ movies, allData }) {
       })
       .catch(err => console.log(err));
   };
+
+  useEffect(() => {
+    dispatch(fetchMovies());
+  }, []);
+
   useEffect(() => {
     if (storedValues) {
       localStorage.setItem('searchValue', JSON.stringify(storedValues || []));
@@ -53,25 +66,29 @@ export default function Home({ movies, allData }) {
       {searchResults.results ? (
         <SearchedMovies searchResults={searchResults} />
       ) : (
-        <PopularMovie movies={movies} />
+        <PopularMovie />
       )}
     </div>
   );
 }
 
+
+
 export async function getStaticProps() {
   const res = await axios(
     `${server}/movie/upcoming?api_key=${process.env.API_KEY}&language=en-US&page=1&region=TR`
   );
-  const allMovies = await axios(
-    'https://api.themoviedb.org/3/movie/popular?api_key=1ffe5453fccfb8abb96f4019a94cf663&language=en-US&page=1'
-  );
-  const allData = allMovies.data;
+  // const allMovies = await axios(
+  //   'https://api.themoviedb.org/3/movie/popular?api_key=1ffe5453fccfb8abb96f4019a94cf663&language=en-US&page=1'
+  // );
+  // const movies = allMovies.data;
+
+
   const movies = res.data;
   return {
     props: {
-      movies,
-      allData
+      // movies,
+      // movies
     }
   };
 }
