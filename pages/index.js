@@ -76,7 +76,7 @@ export default function Home() {
 
 export async function getStaticProps() {
   const res = await axios(
-    `${server}/movie/upcoming?api_key=${process.env.API_KEY}&language=en-US&page=1&region=TR`
+    `${server}/movie/upcoming?api_key=${process.env.NEXT_PUBLIC_API_KEY}&language=en-US&page=1&region=TR`
   );
   // const allMovies = await axios(
   //   'https://api.themoviedb.org/3/movie/popular?api_key=1ffe5453fccfb8abb96f4019a94cf663&language=en-US&page=1'
